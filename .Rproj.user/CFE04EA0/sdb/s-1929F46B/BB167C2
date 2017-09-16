@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "if (Sys.info()[8] == \"lizzzi111\") {\n  setwd(\"~/Documents/DSG_2017_Finals/\")\n} else if (Sys.info()[8] == \"lizzzi111\"){\n  setwd(\"~/Documents/DSG_2017_Finals/\")\n} else if (Sys.info()[8] == \"lizzzi111\"){\n  setwd(\"~/Documents/DSG_2017_Finals/\")\n}\n\n",
+    "created" : 1505575131415.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "3164074583",
+    "id" : "BB167C2",
+    "lastKnownWriteTime" : 4294967296,
+    "last_content_update" : 1505575574755,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
