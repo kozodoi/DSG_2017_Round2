@@ -1,16 +1,16 @@
 {
     "collab_server" : "",
-    "contents" : "if (Sys.info()[8] == \"lizzzi111\") {\n  setwd(\"~/Documents/DSG_2017_Finals/Zillow\")\n} else if (Sys.info()[8] == \"\"){\n  setwd(\"~/Documents/DSG_2017_Finals/\")\n} else if (Sys.info()[8] == \"\"){\n  setwd(\"~/Documents/DSG_2017_Finals/\")\n}\n\n",
+    "contents" : "if (Sys.info()[8] == \"lizzzi111\") {\n  setwd(\"~/Documents/DSG_2017_Finals/Instacart/\")\n} else if (Sys.info()[8] == \"\"){\n  setwd(\"~/Documents/DSG_2017_Finals/\")\n} else if (Sys.info()[8] == \"\"){\n  setwd(\"~/Documents/DSG_2017_Finals/\")\n}\n\n",
     "created" : 1505575131415.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3402655852",
+    "hash" : "2860995982",
     "id" : "BB167C2",
-    "lastKnownWriteTime" : 1505575840,
-    "last_content_update" : 1505575840662,
-    "path" : "~/Documents/DSG_2017_Finals/Zillow/code.R",
-    "project_path" : "Zillow/code.R",
+    "lastKnownWriteTime" : 1505578017,
+    "last_content_update" : 1505578017984,
+    "path" : "~/Documents/DSG_2017_Finals/Instacart/setwd.R",
+    "project_path" : "Instacart/setwd.R",
     "properties" : {
         "tempName" : "Untitled1"
     },
