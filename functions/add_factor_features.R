@@ -15,6 +15,11 @@ add_factor_features <- function(data, target, factors, stats, all_factors = F, a
   
   ##### PREPARATIONS
   
+  # checking if target is factor
+  if (class(data[[target]]) == "factor") {
+    data[[target]] <- as.numeric(data[[target]])-1
+  }
+  
   # selecting factors if not sepcified
   if (all_factors == T) {
     factors <- names(Filter(is.factor, data))
@@ -24,7 +29,7 @@ add_factor_features <- function(data, target, factors, stats, all_factors = F, a
   if (all_stats == T) {
     stats <- c("min", "max", "mean", "median", "size")
   }
-  
+
   # loading libraries
   if (require(pacman) == FALSE) install.packages("pacman")
   library(pacman)
