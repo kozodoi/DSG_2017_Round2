@@ -22,7 +22,7 @@ subm.folder <- "submissions"
 # loading libraries
 if (require(pacman) == FALSE) install.packages("pacman")
 library(pacman)
-p_load(data.table, ggplot2, caret)
+p_load(data.table, ggplot2, caret, Metrics, xgboost)
 
 # loading all functions
 source(file.path(code.folder, "code_0_helper_functions.R"))
@@ -38,8 +38,12 @@ source(file.path(code.folder, "code_0_helper_functions.R"))
 data("Sacramento")
 summary(Sacramento)
 
+# scaling numeric features
+data <- scale_data(data = data, type = "minmax", except = "beds")
+summary(data)
+
 # adding factor features
-data <- add_factor_features(data = Sacramento, target = "price", all_factors = T, all_stats = T, smooth = 10)
+data <- add_factor_features(data = data, target = "price", all_factors = T, all_stats = T, smooth = 10)
 summary(data)
 
 # submiting simple predictions
