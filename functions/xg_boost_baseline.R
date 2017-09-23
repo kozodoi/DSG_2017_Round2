@@ -1,25 +1,22 @@
 
-base_line_model_xgboost = function(data_train, train_label, data_test, test_label, target, best_model=FALSE, nrounds = 100, type = "c"){
+base_line_model_xgboost = function(data_train, train_label, data_test, test_label, target, best_model=FALSE, nrounds = 100, type = "r"){
   
   
   obje= "reg:linear"
-  metrics = list(eval_metric="error",
-                 eval_metric="rmse" 
+  metrics = list(eval_metric="rmse",
+                 eval_metric="logloss" 
   )
-  best_model_parameter = "error"
+  #best_model_parameter = "rmse"
+  optimizer =  "which.min(rmseErrorsHyperparameters$rmse)"
   
   if(type == "c"){
     obje= "binary:logistic"
     metrics = list(eval_metric="error",
-                   eval_metric="rmse",
+                   #eval_metric="rmse",
                    eval_metric="auc"
     )
-    best_model_parameter = "auc"
-    
-  }else if (type == "r"){
-    
-    obje = "reg:linear"
-    
+    #best_model_parameter = "auc"
+    optimizer =  "which.max(rmseErrorsHyperparameters$auc)"
   }
   
   
@@ -36,7 +33,7 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
   #subset for now
   #data.train.xgboost_1 = dtrain[sample.int(n = nrow(dtrain), size = floor(.05*nrow(dtrain)), replace = F), ]
   
-  searchGridSubCol <- expand.grid(subsample = c(0.5, 1), 
+  searchGridSubCol <- expand.grid(subsample = c(0.7, 1), 
                                   colsample_bytree = c(0.6, 0.8, 1),
                                   eta = c(0.01, 0.001, 0.0001),
                                   max_depth = c(100, 500) 
@@ -54,9 +51,7 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
   watchlist <- list(train=DMMatrixTrain, test=DMMatrixTest)
   
   
-  rmseErrorsHyperparameters <- apply(searchGridSubCol, 1, function(parameterList){
-    
-    #searchGridSubCol= parameterList[1,]
+  ErrorsHyperparameters <- apply(searchGridSubCol, 1, function(parameterList){
     
     #Extract Parameters to test
     currentColsampleRate <- parameterList[["colsample_bytree"]]
@@ -92,32 +87,25 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
     )
     
     
-    
-    
-    #Save eval_metric of the best iteration
-    test_error = xgb2$evaluation_log[nrounds]$test_error
-    test_rmse = xgb2$evaluation_log[nrounds]$test_rmse
-    
-    
-    #test_auc = xgb2$evaluation_log[nrounds]$test_auc
-    
-    return(c(test_error, test_rmse, currentSubsample, currentColsampleRate, currentEta, currentMax_depth))
     if(type == "c"){
+      
       test_auc = xgb2$evaluation_log[nrounds]$test_auc
-      return(c(test_error, test_rmse, test_auc, currentSubsample, currentColsampleRate, currentEta, currentMax_depth))
+      test_error = xgb2$evaluation_log[nrounds]$test_error
+      return(c(test_error, test_auc, currentSubsample, currentColsampleRate, currentEta, currentMax_depth))
       
     }else if (type == "r"){
       
-      return(c(test_error, test_rmse, currentSubsample, currentColsampleRate, currentEta, currentMax_depth))
+      test_rmse = xgb2$evaluation_log[nrounds]$test_rmse
+      test_logloss = xgb2$evaluation_log[nrounds]$test_logloss
+      return(c(test_rmse, test_logloss, currentSubsample, currentColsampleRate, currentEta, currentMax_depth))
       
     }
     
-    
   })
   
-  rmseErrorsHyperparameters=transpose(as.data.frame(rmseErrorsHyperparameters))
-  names(rmseErrorsHyperparameters)=c(unlist(unlist(metrics)),names(searchGridSubCol))
-  best.parameters= rmseErrorsHyperparameters[ which.min(rmseErrorsHyperparameters[[ best_model_parameter ]]),]
+  ErrorsHyperparameters=transpose(as.data.frame(ErrorsHyperparameters))
+  names(ErrorsHyperparameters)=c(unlist(metrics),names(searchGridSubCol))
+  best.parameters= ErrorsHyperparameters[  eval(parse(text = optimizer)) ,]
   
   fin_best_model=NULL
   if (best_model==TRUE){
@@ -143,6 +131,6 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
   }
   
   
-  return( list(best_parameters = best.parameters, result = rmseErrorsHyperparameters, fin_best_model = fin_best_model  ))
+  return( list(best_parameters = best.parameters, result = ErrorsHyperparameters, fin_best_model = fin_best_model  ))
   
 }
