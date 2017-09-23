@@ -5,7 +5,7 @@
 #   - target = name of the target variable (numeric)                                            
 #   - factors = list of factor names (or set all_factors = T)                                   
 #   - stats = list of staistics (min, max, mean, median, size or set all_stats = T)  
-#   - smoth = smoothing parameter according to Daria Soboleva (0 = no smoothing)
+#   - smooth = smoothing parameter according to Daria Soboleva (0 = no smoothing)
 #                                                                                               
 ################################################################################################
 

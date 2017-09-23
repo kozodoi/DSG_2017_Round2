@@ -41,3 +41,7 @@ summary(Sacramento)
 # adding factor features
 data <- add_factor_features(data = Sacramento, target = "price", all_factors = T, all_stats = T, smooth = 10)
 summary(data)
+
+# submiting simple predictions
+prediction <- rep(0, nrow(data))
+submit(prediction, data = data, target.var = "target", id.var = "zip", folder = subm.folder, file = "test.csv")
