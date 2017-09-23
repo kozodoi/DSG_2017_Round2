@@ -21,9 +21,10 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
   
   
   size_train = dim(data_train)[1]
-  data = rbind(data_train, data_test)
+  
   data_train[[target]]=NULL
   data_test[[target]]=NULL
+  data = rbind(data_train, data_test)
   dframe_treat = vtreat_vars(data)
   
   dframe_treat_train = dframe_treat[1:size_train,] #train
