@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(data.table)\nlibrary(xgboost)\nlibrary(caret)\nlibrary(stringr)\nlibrary(quanteda)\nlibrary(lubridate)\nlibrary(stringr)\nlibrary(Hmisc)\nlibrary(Matrix)\nlibrary(plyr)\nlibrary(dplyr)\n\nlibrary(vtreat)\nlibrary(psych)  #dummy coding\n\nlibrary(svd)\nlibrary(sparsesvd)\nlibrary(lsa) # cosine for not sparce\nlibrary(qlcMatrix)\nlibrary(kernlab)\nlibrary(sparcl)\nlibrary(fastcluster)\n\n\n\n# read data #\n\n# loading training data\ntrain_gavno <- fread(file.path(data.folder, \"train_gavno.csv\"), sep = \",\", dec = \".\", header = TRUE)\nvalid_gavno <- fread(file.path(data.folder, \"valid_gavno.csv\"), sep = \",\", dec = \".\", header = TRUE)\n\nbase_line_model_xgboost \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "created" : 1506364224409.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "876549531",
+    "id" : "7FB1BF10",
+    "lastKnownWriteTime" : 6,
+    "last_content_update" : 1506365198447,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

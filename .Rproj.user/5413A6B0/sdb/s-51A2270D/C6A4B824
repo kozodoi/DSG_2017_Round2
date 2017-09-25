@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\nto_execute_first <- function(data_train_full, percent){\n  \n  data_train_full = data.table(data_train_full)\n  data_train_full[, id:= .I, ]\n  split = split_dataset(data_train_full, percent )\n  \n  train = split$train\n  valid = split$test\n  \n  save(train, file = \"./data/train.rda\")\n  save(valid, file = \"./data/valid.rda\") \n  \n}",
+    "created" : 1506364986236.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3938054864",
+    "id" : "C6A4B824",
+    "lastKnownWriteTime" : 1506366883,
+    "last_content_update" : 1506366883769,
+    "path" : "~/Documents/HU_Berlin/ML/DSG/DSG_2017_Finals/functions/to_execute_first.R",
+    "project_path" : "functions/to_execute_first.R",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
