@@ -26,6 +26,7 @@ p_load(dplyr, data.table, caret, Metrics, xgboost, titanic, vtreat)
 
 # loading all functions
 source(file.path(code.folder, "code_0_helper_functions.R"))
+source(file.path(code.folder, "code_0_parameters.R"))
 
 
 ###################################
@@ -34,6 +35,11 @@ source(file.path(code.folder, "code_0_helper_functions.R"))
 #                                 #
 ###################################
 
-train_data_full =  fread(file.path(data.folder, "train.csv"), sep = ",", dec = ".", header = TRUE) 
+train_data_full =  as.data.frame(fread(file.path(data.folder, "train.csv"), sep = ",", dec = ".", header = TRUE) )
+
+train_data_full[, num_vars] <- sapply(train_data_full[, num_vars], function(x) as.numeric(as.character(x))) 
+train_data_full[, fac_vars] <- sapply(train_data_full[, fac_vars], as.factor)
+# train_data_full[, dat_vars] <- sapply(train_data_full[, dat_vars], function(x) as.Date(x, origin = '1971-01-01'))
+
 to_execute_first(train_data_full, 0.8)
 
