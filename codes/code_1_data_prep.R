@@ -8,7 +8,7 @@
 rm(list = ls())
 
 # setting directory depending on a user
-if (Sys.info()[8] == "lizzzi111")           {setwd("~/Documents/DSG_2017_Finals/")} 
+if (Sys.info()[8] == "lizzzi111")           {setwd("~/DSG_2017_Finals/")} 
 if (Sys.info()[8] == "kozodoi")             {setwd("~/Documents/Competitions/DSG_2017_Finals/")}
 if (Sys.info()[8] == "nataliasverchkova")   {setwd("~/Documents/DSG/DSG_2017_Finals/")}
 if (Sys.info()[8] == "oleksiyostapenko")    {setwd("/Users/oleksiyostapenko/Documents/HU_Berlin/ML/DSG/DSG_2017_Finals")}
@@ -35,11 +35,24 @@ source(file.path(code.folder, "code_0_parameters.R"))
 #                                 #
 ###################################
 
-train_data_full =  as.data.frame(fread(file.path(data.folder, "train.csv"), sep = ",", dec = ".", header = TRUE) )
-
+train_data_full =  fread(file.path(data.folder, "train.csv"), sep = ",", dec = ".", header = TRUE)
+train_data_full[, id:=.I]
+train_data_full = as.data.frame(train_data_full)
 train_data_full[, num_vars] <- sapply(train_data_full[, num_vars], function(x) as.numeric(as.character(x))) 
 train_data_full[, fac_vars] <- sapply(train_data_full[, fac_vars], as.factor)
 # train_data_full[, dat_vars] <- sapply(train_data_full[, dat_vars], function(x) as.Date(x, origin = '1971-01-01'))
 
-to_execute_first(train_data_full, 0.8)
+idx = caret::createDataPartition(train_data_full$id, p = 0.8, list = FALSE)
+train_data_full[idx,"part"] = "train" 
+train_data_full[-idx,"part"] = "valid" 
 
+save(train_data_full, file = "./data/data_partitioned.rda")
+
+
+###################################
+#                                 #
+#         DATA PREPARATION        #
+#                                 #
+###################################
+
+load("./data/data_partitioned.rda")
