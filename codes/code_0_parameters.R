@@ -10,7 +10,7 @@ dv <- ''
 id <- ''
 
 ## Variables types
-num_vars <- c('') # numeric
-fac_vars <- c('') # factor vars
+num_vars <- c("Age") # numeric
+fac_vars <- c("Pclass", "Sex", "Embarked") 
 dat_vars <- c('') # dates
 ign_vars <- c('') # ignore variables

@@ -35,15 +35,12 @@ source(file.path(code.folder, "code_0_parameters.R"))
 #                                 #
 ###################################
 
-train_data_full =  read.csv(file.path(data.folder, "train.csv"), sep = ",", dec = ".", header = TRUE)
-train_data_full$id = seq(1,nrow(train_data_full) )
+load("./data/data_partitioned.rda")
 
-train_data_full[num_vars] <- lapply(train_data_full[num_vars], function(x) as.numeric(as.character(x))) 
-train_data_full[fac_vars] <- lapply(train_data_full[fac_vars], function(x) factor(x))
-# train_data_full[, dat_vars] <- sapply(train_data_full[, dat_vars], function(x) as.Date(x, origin = '1971-01-01'))
+train <- train_data_full[train_data_full$part == "train", ]
+valid <- train_data_full[train_data_full$part == "valid", ]
 
-idx = caret::createDataPartition(train_data_full$id, p = 0.8, list = FALSE)
-train_data_full[idx,"part"] = "train" 
-train_data_full[-idx,"part"] = "valid" 
+data <- add_factor_features(train, valid, target = "Survived", all_factors = T, stats = "mean", smooth = 10)
+train <- data$train
+valid <- data$valid
 
-save(train_data_full, file = "./data/data_partitioned.rda")
