@@ -10,7 +10,7 @@ rm(list = ls())
 # setting directory depending on a user
 if (Sys.info()[8] == "lizzzi111") {setwd("~/Documents/DSG_2017_Finals/")} 
 if (Sys.info()[8] == "kozodoi")   {setwd("~/Documents/Competitions/DSG_2017_Finals/")}
-if (Sys.info()[8] == "")          {setwd("")}
+if (Sys.info()[8] == "nataliasverchkova")          {setwd("~/Documents/DSG/DSG_2017_Finals/")}
 if (Sys.info()[8] == "")          {setwd("")}
 
 # setting inner folders
