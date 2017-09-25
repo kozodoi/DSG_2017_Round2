@@ -36,7 +36,7 @@ add_factor_features <- function(train, valid, target, factors, stats, all_factor
   # loading libraries
   if (require(pacman) == FALSE) install.packages("pacman")
   library(pacman)
-  p_load(train.table)
+  p_load(data.table)
   
   # converting to train table
   train <- as.data.table(train)
