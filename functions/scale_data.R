@@ -20,10 +20,10 @@ scale_data <- function(train, valid, type = c("minmax", "z"), except = NA) {
   for (var in numeric.vars) {
     
     # calculating moments
-    mean <- mean(train[[var]])
-    sd   <- sd(train[[var]])
-    min  <- min(train[[var]])
-    max  <- max(train[[var]])
+    mean <- mean(train[[var]], na.rm = T)
+    sd   <- sd(train[[var]], na.rm = T)
+    min  <- min(train[[var]], na.rm = T)
+    max  <- max(train[[var]], na.rm = T)
       
     # applying scaling method
     if (type == "z")      {train[[var]] <- (train[[var]] - mean) / sd}

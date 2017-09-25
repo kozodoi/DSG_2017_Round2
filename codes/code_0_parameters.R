@@ -4,10 +4,10 @@
 set.seed(213)
 
 ## Dependent variable name
-dv <- ''
+dv <- 'Survived'
 
 ## ID variable
-id <- ''
+id <- 'id'
 
 ## Variables types
 num_vars <- c("Age") # numeric
