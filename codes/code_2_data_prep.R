@@ -37,10 +37,14 @@ source(file.path(code.folder, "code_0_parameters.R"))
 
 load("./data/data_partitioned.rda")
 
+#####
+#FOR NEW FEATURES
+######
+
 train <- train_data_full[train_data_full$part == "train", ]
 valid <- train_data_full[train_data_full$part == "valid", ]
 
-data <- add_factor_features(train, valid, target = dv, all_factors = T, stats = "mean", smooth = 10)
+data <- add_factor_features(train, valid, target = dv, all_factors = T, all_stats = T, smooth = 10)
 train <- data$train
 valid <- data$valid
 
