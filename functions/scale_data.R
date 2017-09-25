@@ -8,10 +8,10 @@
 ############################################################
 
 # introducing the function 
-scale_data <- function(data, type = c("minmax", "z"), except = NA) {
+scale_data <- function(train, valid, type = c("minmax", "z"), except = NA) {
   
   # finding all numeric features
-  numeric.vars <- names(sapply(data, class)[sapply(data, class) %in% c("numeric", "integer")])
+  numeric.vars <- names(sapply(train, class)[sapply(train, class) %in% c("numeric", "integer")])
   
   # removing features that should not be scaled
   numeric.vars <- numeric.vars[!(numeric.vars %in% except)]
@@ -20,16 +20,20 @@ scale_data <- function(data, type = c("minmax", "z"), except = NA) {
   for (var in numeric.vars) {
     
     # calculating moments
-    mean <- mean(data[[var]])
-    sd   <- sd(data[[var]])
-    min  <- min(data[[var]])
-    max  <- max(data[[var]])
+    mean <- mean(train[[var]])
+    sd   <- sd(train[[var]])
+    min  <- min(train[[var]])
+    max  <- max(train[[var]])
       
     # applying scaling method
-    if (type == "z")      {data[[var]] <- (data[[var]] - mean) / sd}
-    if (type == "minmax") {data[[var]] <- (data[[var]] - min) / (max - min)}
+    if (type == "z")      {train[[var]] <- (train[[var]] - mean) / sd}
+    if (type == "minmax") {train[[var]] <- (train[[var]] - min) / (max - min)}
+    
+    # applying scaling method
+    if (type == "z")      {valid[[var]] <- (valid[[var]] - mean) / sd}
+    if (type == "minmax") {valid[[var]] <- (valid[[var]] - min) / (max - min)}
   }
   
-  # returning the data set
-  return(data)
+  # returning the train set
+  return(list(train = train, valid = valid))
 }

@@ -22,7 +22,7 @@ subm.folder <- "submissions"
 # loading libraries
 if (require(pacman) == FALSE) install.packages("pacman")
 library(pacman)
-p_load(data.table, ggplot2, caret, Metrics, xgboost)
+p_load(dplyr, data.table, caret, Metrics, xgboost, titanic, vtreat)
 
 # loading all functions
 source(file.path(code.folder, "code_0_helper_functions.R"))
@@ -37,15 +37,19 @@ source(file.path(code.folder, "code_0_helper_functions.R"))
 # loading exapmle data set
 data("Sacramento")
 summary(Sacramento)
+train <- Sacramento[1:700,]
+valid <- Sacramento[701:932,]
 
 # scaling numeric features
-data <- scale_data(data = data, type = "minmax", except = "beds")
-summary(data)
+data <- scale_data(train, valid, type = "minmax", except = "beds")
+train <- data$train
+valid <- data$valid
 
 # adding factor features
-data <- add_factor_features(data = data, target = "price", all_factors = T, all_stats = T, smooth = 10)
-summary(data)
+data <- add_factor_features(train, valid, target = "price", all_factors = T, all_stats = T, smooth = 10)
+train <- data$train
+valid <- data$valid
 
 # submiting simple predictions
-prediction <- rep(0, nrow(data))
-submit(prediction, data = data, target.var = "target", id.var = "zip", folder = subm.folder, file = "test.csv")
+prediction <- rep(0, nrow(valid))
+submit(prediction, data = valid, target.var = "target", id.var = "zip", folder = subm.folder, file = "test.csv")

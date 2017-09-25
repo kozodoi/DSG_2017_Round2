@@ -10,19 +10,22 @@
 ################################################################################################
 
 # introducing the function 
-add_factor_features <- function(data, target, factors, stats, all_factors = F, all_stats = F, smooth = 10) {
+add_factor_features <- function(train, valid, target, factors, stats, all_factors = F, all_stats = F, smooth = 10) {
   
   
   ##### PREPARATIONS
   
+  # saving colnames
+  initial.vars <- colnames(train)
+  
   # checking if target is factor
-  if (class(data[[target]]) == "factor") {
-    data[[target]] <- as.numeric(data[[target]])-1
+  if (class(train[[target]]) == "factor") {
+    train[[target]] <- as.numeric(train[[target]])-1
   }
   
   # selecting factors if not sepcified
   if (all_factors == T) {
-    factors <- names(Filter(is.factor, data))
+    factors <- names(Filter(is.factor, train))
   }
   
   # selecting stats if not sepcified
@@ -35,29 +38,29 @@ add_factor_features <- function(data, target, factors, stats, all_factors = F, a
   library(pacman)
   p_load(data.table)
   
-  # converting to data table
-  data <- as.data.table(data)
+  # converting to train table
+  train <- as.data.table(train)
   
 
   
   ##### ERRORS
   
   # checking if target is a numeric variable
-  if (!class(data[[target]]) %in% c("numeric", "integer")) {
+  if (!class(train[[target]]) %in% c("numeric", "integer")) {
     stop("Target variable is not numeric")
     }
   
   # checking if factors are indeed factors 
-  if (sum(factors %in% names(Filter(is.factor, data))) < length(factors)) {
+  if (sum(factors %in% names(Filter(is.factor, train))) < length(factors)) {
     stop("Not all factors are factor variables")
   }
   
   
   ##### COMPUTING AGGREGATED STATISTICS
-  global_mean   <- mean(data[[target]],   na.rm = T)
-  global_median <- median(data[[target]], na.rm = T)
-  global_min    <- min(data[[target]],    na.rm = T)
-  global_max    <- max(data[[target]],    na.rm = T)
+  global_mean   <- mean(train[[target]],   na.rm = T)
+  global_median <- median(train[[target]], na.rm = T)
+  global_min    <- min(train[[target]],    na.rm = T)
+  global_max    <- max(train[[target]],    na.rm = T)
 
   
   ##### COMPUTING FACTOR-LEVEL STATISTICS
@@ -67,36 +70,46 @@ add_factor_features <- function(data, target, factors, stats, all_factors = F, a
       # computing statistics: min
       if (stat == "min") {
         var_name <- paste0(target, "_", variable, "_", stat)
-        data[, (var_name) := (min(get(target), na.rm = T)*.N  + global_min*smooth)/(.N + smooth), by = get(variable)]
+        train[, (var_name) := (min(get(target), na.rm = T)*.N  + global_min*smooth)/(.N + smooth), by = get(variable)]
       }
   
       # computing statistics: max
       if (stat == "max") {
         var_name <- paste0(target, "_", variable, "_", stat)
-        data[, (var_name) := (max(get(target), na.rm = T)*.N + global_max*smooth)/(.N + smooth), by = get(variable)]
+        train[, (var_name) := (max(get(target), na.rm = T)*.N + global_max*smooth)/(.N + smooth), by = get(variable)]
       }
       
       # computing statistics: mean
       if (stat == "mean") {
         var_name <- paste0(target, "_", variable, "_", stat)
-        data[, (var_name) := (mean(get(target), na.rm = T)*.N + global_mean*smooth)/(.N + smooth), by = get(variable)]
+        train[, (var_name) := (mean(get(target), na.rm = T)*.N + global_mean*smooth)/(.N + smooth), by = get(variable)]
       }
       
       # computing statistics: median
       if (stat == "median") {
         var_name <- paste0(target, "_", variable, "_", stat)
-        data[, (var_name) := (median(get(target), na.rm = T)*.N + global_median*smooth)/(.N + smooth), by = get(variable)]
+        train[, (var_name) := (median(get(target), na.rm = T)*.N + global_median*smooth)/(.N + smooth), by = get(variable)]
       }
 
       # computing statistics: size
       if (stat == "size") {
         var_name <- paste0(target, "_", variable, "_", stat)
-        data[, (var_name) := as.numeric(.N), by = get(variable)]
+        train[, (var_name) := as.numeric(.N), by = get(variable)]
       }
     }
   }
   
+  # saving colnames
+  current.vars  <- colnames(train)
+  current.stats <- current.vars[!current.vars %in% initial.vars]
+  
+  # converting to data.frame
+  train <- as.data.frame(train)
+  valid <- as.data.frame(valid)
+  
+  # merging stats with validation
+  valid <- merge(valid, train[, c(factors, current.stats)], by = factors, all.x = T, all.y = F, sort = F)
   
   ##### RETURNING THE DATA SET
-  return(data)
+  return(list(train = train, valid = valid))
 }
