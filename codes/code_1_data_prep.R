@@ -32,7 +32,7 @@ p_load(dplyr, data.table, caret, Metrics, xgboost, titanic, vtreat)
 # loading all functions
 source(file.path(code.folder, "code_0_helper_functions.R"))
 
-train_data_full =  fread(file.path(data.folder, "train.csv"), sep = ",", dec = ".", header = TRUE)
+train_data_full =  fread(file.path(data.folder, "train.csv"), sep = ",", dec = ".", header = TRUE) 
 to_execute_first(train_data_full, 0.8)
 
 
