@@ -8,7 +8,7 @@ to_execute_first <- function(data_train_full, percent){
   train = split$train
   valid = split$test
   
-  fwrite(train, file = "./data/train.csv")
-  fwrite(valid, file = "./data/valid.csv")
+  fwrite(train, file = "./data/train_gavno.csv")
+  fwrite(valid, file = "./data/valid_gavno.csv") 
   
 }
