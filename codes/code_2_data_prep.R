@@ -65,9 +65,6 @@ load(file.path(data.folder, "data_partitioned.rda"))
 data_train <- data_known[data_known$part == "train", ]
 data_valid <- data_known[data_known$part == "valid", ]
 
-label_valid = valid$Survived
-valid$Survived="NA"
-
 # adding factor features (Nikita)
 data_known <- add_factor_features(data_train, data_valid, target = dv, smooth = 10)
 data_train <- data_known$train
