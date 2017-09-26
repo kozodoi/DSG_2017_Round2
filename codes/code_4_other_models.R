@@ -31,32 +31,32 @@ source(file.path(code.folder, "code_0_parameters.R"))
 
 ###################################
 #                                 #
-#         CREATING FEATURES       #
+#     MODEL LIBRARY - RAW DATA    #
 #                                 #
 ###################################
 
 # loading the data
 load(file.path(data.folder, "data_partitioned.rda"))
 
-
-##### CODES FOR NEW FEATURES: LIZA
-
-
-##### CODES FOR NEW FEATURES: NATALIA
+# data partitioning
+train <- train_data_full[train_data_full$part == "train", ]
+valid <- train_data_full[train_data_full$part == "valid", ]
 
 
-##### CODES FOR NEW FEATURES: NIKITA
+# train some models
+# predict validation and unknown data
+# compute accuracy
+# compare everything
 
 
-##### CODES FOR NEW FEATURES: OLEKS
+#########################################
+#                                       #
+#   MODEL LIBRARY - WITH AUTO FEATURES  #
+#                                       #
+#########################################
 
-
-
-###################################
-#                                 #
-#        AUTOMATIC FEATURES       #
-#                                 #
-###################################
+# loading the data
+load(file.path(data.folder, "data_partitioned.rda"))
 
 # data partitioning
 train <- train_data_full[train_data_full$part == "train", ]
@@ -67,11 +67,7 @@ data <- add_factor_features(train, valid, target = dv, smooth = 10)
 train <- data$train
 valid <- data$valid
 
-# scaling data
-data <- scale_data(train, valid, type = "minmax", except = c(dv, id))
-train <- data$train
-valid <- data$valid
-
-# saving data as .RDA
-save(train, file = file.path(data.folder, "data_train_prepared.rda"))
-save(valid, file = file.path(data.folder, "data_valid_prepared.rda"))
+# train some models
+# predict validation and unknown data
+# compute accuracy
+# compare everything

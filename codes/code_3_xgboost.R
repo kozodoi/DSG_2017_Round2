@@ -31,32 +31,33 @@ source(file.path(code.folder, "code_0_parameters.R"))
 
 ###################################
 #                                 #
-#         CREATING FEATURES       #
+#        XGBOOST - RAW DATA       #
 #                                 #
 ###################################
 
 # loading the data
 load(file.path(data.folder, "data_partitioned.rda"))
 
-
-##### CODES FOR NEW FEATURES: LIZA
-
-
-##### CODES FOR NEW FEATURES: NATALIA
+# data partitioning
+train <- train_data_full[train_data_full$part == "train", ]
+valid <- train_data_full[train_data_full$part == "valid", ]
 
 
-##### CODES FOR NEW FEATURES: NIKITA
-
-
-##### CODES FOR NEW FEATURES: OLEKS
+# train xgboost model
+# predict validation data
+# predict public data
+# submit predictions
 
 
 
 ###################################
 #                                 #
-#        AUTOMATIC FEATURES       #
+#   XGBOOST - WITH AUTO FEATURES  #
 #                                 #
 ###################################
+
+# loading the data
+load(file.path(data.folder, "data_partitioned.rda"))
 
 # data partitioning
 train <- train_data_full[train_data_full$part == "train", ]
@@ -67,11 +68,28 @@ data <- add_factor_features(train, valid, target = dv, smooth = 10)
 train <- data$train
 valid <- data$valid
 
-# scaling data
-data <- scale_data(train, valid, type = "minmax", except = c(dv, id))
-train <- data$train
-valid <- data$valid
 
-# saving data as .RDA
-save(train, file = file.path(data.folder, "data_train_prepared.rda"))
-save(valid, file = file.path(data.folder, "data_valid_prepared.rda"))
+# train xgboost model
+# predict validation data
+# compute accuracy
+# predict unknown data
+# submit predictions
+
+
+
+###################################
+#                                 #
+#   XGBOOST - WITH ALL FEATURES   #
+#                                 #
+###################################
+
+# loading the prepared data
+load(file.path(data.folder, "data_train_prepared.rda"))
+load(file.path(data.folder, "data_valid_prepared.rda"))
+
+
+# train xgboost model
+# predict validation data
+# compute accuracy
+# predict unknown data
+# submit predictions

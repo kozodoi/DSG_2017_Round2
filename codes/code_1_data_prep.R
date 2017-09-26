@@ -35,15 +35,19 @@ source(file.path(code.folder, "code_0_parameters.R"))
 #                                 #
 ###################################
 
-train_data_full =  read.csv(file.path(data.folder, "train.csv"), sep = ",", dec = ".", header = TRUE)
-train_data_full$id = seq(1,nrow(train_data_full) )
+# loading data and creating IDs
+train_data_full =  read.csv(file.path(data.folder, "known.csv"), sep = ",", dec = ".", header = TRUE)
+train_data_full$id = seq(1,nrow(train_data_full))
 
+# converting features
 train_data_full[num_vars] <- lapply(train_data_full[num_vars], function(x) as.numeric(as.character(x))) 
 train_data_full[fac_vars] <- lapply(train_data_full[fac_vars], function(x) factor(x))
-# train_data_full[, dat_vars] <- sapply(train_data_full[, dat_vars], function(x) as.Date(x, origin = '1971-01-01'))
+#train_data_full[dat_vars] <- lapply(train_data_full[dat_vars], function(x) as.Date(x, origin = '1971-01-01'))
 
+# random data partitioning
 idx = caret::createDataPartition(train_data_full$id, p = 0.8, list = FALSE)
-train_data_full[idx,"part"] = "train" 
+train_data_full[idx, "part"] = "train" 
 train_data_full[-idx,"part"] = "valid" 
 
-save(train_data_full, file = "./data/data_partitioned.rda")
+# saving data as .RDA
+save(train_data_full, file = file.path(data.folder, "data_partitioned.rda"))
