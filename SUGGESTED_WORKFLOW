@@ -51,3 +51,9 @@ SUGGESTED WORKFLOW WITH CONSECUTIVE STEPS
 9. [PERSON 2] Open "code_6_grid_search.R". Launch grid search for some xgboost parameters. Compare the results, save optimal parameter values in "code_0_parameters.R"
 
 9. [PERSON 3] Launch ensembles in "code_5_ensembles.R".
+
+
+# Futher notes/suggestions:
+1) Name models with algorythm name and params, e.g. `rf_mtry10`
+2) For each model you run check the runtime and probably it makes sense to create table `model|parameters|model_name|runtime|accuracy`
+3) Save train forecasts, test forecasts, model parameters for additional test set we'll get
