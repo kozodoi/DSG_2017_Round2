@@ -77,13 +77,13 @@ data_valid <- data_known$valid
 
 #adding moments per groups for correlated variabel (Alex) 
 #don't use target as "corelated_real_var" since function does no smoothing
-data = moments_per_group_on_real_corelated_var(train, valid, corelated_real_var = "Age", list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")))
+data = moments_per_group_on_real_corelated_var(data_train, data_valid, corelated_real_var = "Age", list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")))
 train <- data$train
 valid <- data$valid
 
 #adding smoothed mean per groups (Alex)
 # here we calculate the mean only for the target variable per groups
-data = smoothed_mean_per_group(data_train = train, data_valid = valid, target_name = "Survived", var_groups = list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")), alpha = 10)
+data = smoothed_mean_per_group(data_train = data_train, data_valid = data_valid, target_name = dv, var_groups = list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")), alpha = 10)
 train <- data$train
 valid <- data$valid
 
