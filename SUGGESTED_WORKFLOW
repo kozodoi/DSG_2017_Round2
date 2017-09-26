@@ -58,3 +58,4 @@ SUGGESTED WORKFLOW WITH CONSECUTIVE STEPS
 1) Name models with algorythm name and params, e.g. `rf_mtry10`
 2) For each model you run check the runtime and probably it makes sense to create table `model|parameters|model_name|runtime|accuracy`
 3) Save train forecasts, test forecasts, model parameters for additional test set we'll get
+4) I still suggest trying models first on sample data (say 10%) to estimate the runtime and if params work correctly
