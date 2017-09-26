@@ -10,7 +10,7 @@
 ################################################################################################
 
 # introducing the function 
-add_factor_features <- function(train, valid, target, factors = NULL, stats = NULL, all_factors = F, all_stats = F, smooth = 10) {
+add_factor_features <- function(train, valid, target, factors = NULL, stats = NULL, all_factors = T, all_stats = T, smooth = 10) {
   
   
   ##### PREPARATIONS
@@ -108,8 +108,10 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
   valid <- as.data.frame(valid)
   
   # merging stats with validation
-  valid <- merge(valid, train[, c(factors, current.stats)], by = factors, all.x = T, all.y = F, sort = F)
-  
+  if (length(c(factors, current.stats)) > 0) {
+    valid <- merge(valid, train[, c(factors, current.stats)], by = factors, all.x = T, all.y = F, sort = F)
+  }
+    
   ##### RETURNING THE DATA SET
   return(list(train = train, valid = valid))
 }
