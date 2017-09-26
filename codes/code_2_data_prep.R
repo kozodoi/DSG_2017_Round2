@@ -38,6 +38,9 @@ source(file.path(code.folder, "code_0_parameters.R"))
 # loading the data
 load(file.path(data.folder, "data_partitioned.rda"))
 
+# Comment Alex: need store the labels of the test subset in a seperate vector first and set the label column to NAs#
+#==================================================================================================================#
+
 
 ##### CODES FOR NEW FEATURES: LIZA
 
@@ -62,6 +65,9 @@ load(file.path(data.folder, "data_partitioned.rda"))
 train <- train_data_full[train_data_full$part == "train", ]
 valid <- train_data_full[train_data_full$part == "valid", ]
 
+label_valid = valid$Survived
+valid$Survived="NA"
+
 # adding factor features (Nikita)
 data <- add_factor_features(train, valid, target = dv, smooth = 10)
 train <- data$train
@@ -69,6 +75,18 @@ valid <- data$valid
 
 # scaling data
 data <- scale_data(train, valid, type = "minmax", except = c(dv, id))
+train <- data$train
+valid <- data$valid
+
+#adding moments per groups for correlated variabel (Alex) 
+#don't use target as "corelated_real_var" since function does no smoothing
+data = moments_per_group_on_real_corelated_var(train, valid, corelated_real_var = "Age", list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")))
+train <- data$train
+valid <- data$valid
+
+#adding smoothed mean per groups (Alex)
+# here we calculate the mean only for the target variable per groups
+data = smoothed_mean_per_group(data_train = train, data_valid = valid, target_name = "Survived", var_groups = list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")), alpha = 10)
 train <- data$train
 valid <- data$valid
 
