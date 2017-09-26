@@ -44,8 +44,22 @@ data_valid <- data_known[data_known$part == "valid", ]
 
 
 # train xgboost model
+#! handles only numerical values, therefor vtreat as encoder
+treatmentPlan <-  create_vtreat_treatPlan(data_train = data_train, label = dv, binary_class = TRUE)
+data_train_treat <-  vtreat_vars(data = data_train, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
+data_valid_treat <- vtreat_vars(data = data_valid, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
+
+model1 <-  base_line_model(data_train = data_train_treat, train_label = data_train_treat[[dv]], data_valid = data_valid_treat, valid_label = data_valid_treat[[dv]], target = dv, nrounds = 500, type = "c")
+
 # predict validation data
+
+pred <-  predict(model1, as.matrix( data_valid_treat[, !names(data_valid_treat) %in% c(dv)] ))
+prediction <- as.numeric(pred > 0.5)
+auc(data_valid_treat[[dv]], prediction)
+
 # predict public data
+
+
 # submit predictions
 
 
@@ -64,13 +78,28 @@ data_train <- data_known[data_known$part == "train", ]
 data_valid <- data_known[data_known$part == "valid", ]
 
 # adding factor features (Nikita)
-data_known <- add_factor_features(data_train, data_valid, target = dv, smooth = 10)
+data_known <- add_factor_features(data_train, data_valid, target = dv, smooth = 10000)
 data_train <- data_known$train
 data_valid <- data_known$valid
 
+data_train$
 
 # train xgboost model
+
+treatmentPlan <-  create_vtreat_treatPlan(data_train = data_train, label = dv, binary_class = TRUE)
+data_train_treat <-  vtreat_vars(data = data_train, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
+data_valid_treat <- vtreat_vars(data = data_valid, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
+
+model2 <-  base_line_model(data_train = data_train_treat, train_label = data_train_treat[[dv]], data_valid = data_valid_treat, valid_label = data_valid_treat[[dv]], target = dv, nrounds = 500, type = "c")
+
+
 # predict validation data
+
+
+pred2 <-  predict(model2, as.matrix( data_valid_treat[, !names(data_valid_treat) %in% c(dv)] ))
+prediction2 <- as.numeric(pred2 > 0.5)
+auc(data_valid_treat[[dv]], prediction2)
+
 # compute accuracy
 # predict unknown data
 # submit predictions

@@ -45,9 +45,9 @@ data_known[fac_vars] <- lapply(data_known[fac_vars], function(x) factor(x))
 #data_known[dat_vars] <- lapply(data_known[dat_vars], function(x) as.Date(x, origin = '1971-01-01'))
 
 # random data partitioning
-idx = caret::createDataPartition(data_known$id, p = 0.8, list = FALSE)
-data_known[idx, "part"] = "train" 
-data_known[-idx,"part"] = "valid" 
+idx <-  caret::createDataPartition(data_known$id, p = 0.8, list = FALSE)
+data_known[idx, "part"] <-  "train" 
+data_known[-idx,"part"] <-  "valid" 
 
 # saving data as .RDA
 save(data_known, file = file.path(data.folder, "data_partitioned.rda"))
