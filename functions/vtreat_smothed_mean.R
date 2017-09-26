@@ -137,8 +137,10 @@ smoothed_mean_per_group_by_pos <- function(data_in, target_name, var_groups, alp
 }
 
 #calculate moments of a fature (that correlates with target) pe defined groups
-moments_per_group_on_real_corelated_var <- function(data_in, corelated_real_var, var_groups){
-  #data_in = data.table(data)
+moments_per_group_on_real_corelated_var <- function(data_train, data_valid, corelated_real_var, var_groups){
+  data = rbind(data_train, data_valid)
+  data_in = data.table(data)
+  length_train = dim(data_train)[1]
   
   for (group in var_groups){
     group_in = unlist(group)
@@ -205,7 +207,12 @@ moments_per_group_on_real_corelated_var <- function(data_in, corelated_real_var,
     
     
   }
-  return(data_in)
+  
+  
+  train = data_in[c(1:length_train),]
+  valid = data_in[-c(1:length_train),]
+  
+  return(list(train, valid))
   
 }
 
