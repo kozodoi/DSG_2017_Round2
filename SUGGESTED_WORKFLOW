@@ -23,7 +23,8 @@ SUGGESTED WORKFLOW WITH CONSECUTIVE STEPS
 4. [PERSON 2] Open "code_4_other_models.R". Launch a model library with several algorithms on the raw data. Save predictions in "pred_valid" and "pred_unknown" using the function "create_submission.R". Join person 4 while waiting for models. 
 
 4. [PERSON 3] If task is classification - create two submissions: all zeroes and all ones. Submit, compare accuracy, make conclusions about class balance in the unknown data. Compare it with the known data. Keep it in mind for later. Join person 4 when finished.
-
+              If task is regression     - submission with all means as forecast.
+              
 4. [PERSON 4] Open "code_2_data_prep.R". Think about new features. Pay attention to names, sorting, format (data.frame or data.table). Discuss ideas. Write codes in the corresponding sections of "code_2_data_prep.R". 
 
 #########################
