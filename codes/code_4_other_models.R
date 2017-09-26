@@ -39,8 +39,8 @@ source(file.path(code.folder, "code_0_parameters.R"))
 load(file.path(data.folder, "data_partitioned.rda"))
 
 # data partitioning
-train <- train_data_full[train_data_full$part == "train", ]
-valid <- train_data_full[train_data_full$part == "valid", ]
+data_train <- data_known[data_known$part == "train", ]
+data_valid <- data_known[data_known$part == "valid", ]
 
 
 # train some models
@@ -59,13 +59,13 @@ valid <- train_data_full[train_data_full$part == "valid", ]
 load(file.path(data.folder, "data_partitioned.rda"))
 
 # data partitioning
-train <- train_data_full[train_data_full$part == "train", ]
-valid <- train_data_full[train_data_full$part == "valid", ]
+data_train <- data_known[data_known$part == "train", ]
+data_valid <- data_known[data_known$part == "valid", ]
 
 # adding factor features (Nikita)
-data <- add_factor_features(train, valid, target = dv, smooth = 10)
-train <- data$train
-valid <- data$valid
+data_known <- add_factor_features(data_train, data_valid, target = dv, smooth = 10)
+data_train <- data_known$train
+data_valid <- data_known$valid
 
 # train some models
 # predict validation and unknown data

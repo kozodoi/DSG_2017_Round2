@@ -62,21 +62,21 @@ load(file.path(data.folder, "data_partitioned.rda"))
 ###################################
 
 # data partitioning
-train <- train_data_full[train_data_full$part == "train", ]
-valid <- train_data_full[train_data_full$part == "valid", ]
+data_train <- data_known[data_known$part == "train", ]
+data_valid <- data_known[data_known$part == "valid", ]
 
 label_valid = valid$Survived
 valid$Survived="NA"
 
 # adding factor features (Nikita)
-data <- add_factor_features(train, valid, target = dv, smooth = 10)
-train <- data$train
-valid <- data$valid
+data_known <- add_factor_features(data_train, data_valid, target = dv, smooth = 10)
+data_train <- data_known$train
+data_valid <- data_known$valid
 
 # scaling data
-data <- scale_data(train, valid, type = "minmax", except = c(dv, id))
-train <- data$train
-valid <- data$valid
+data_known <- scale_data(data_train, data_valid, type = "minmax", except = c(dv, id))
+data_train <- data_known$train
+data_valid <- data_known$valid
 
 #adding moments per groups for correlated variabel (Alex) 
 #don't use target as "corelated_real_var" since function does no smoothing
@@ -91,5 +91,5 @@ train <- data$train
 valid <- data$valid
 
 # saving data as .RDA
-save(train, file = file.path(data.folder, "data_train_prepared.rda"))
-save(valid, file = file.path(data.folder, "data_valid_prepared.rda"))
+save(data_train, file = file.path(data.folder, "data_train_prepared.rda"))
+save(data_valid, file = file.path(data.folder, "data_valid_prepared.rda"))

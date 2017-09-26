@@ -38,4 +38,3 @@ source(file.path(code.folder, "code_0_parameters.R"))
 # loading the prepared data
 load(file.path(data.folder, "data_train_prepared.rda"))
 load(file.path(data.folder, "data_valid_prepared.rda"))
-
