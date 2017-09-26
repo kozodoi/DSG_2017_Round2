@@ -1,0 +1,53 @@
+SUGGESTED WORKFLOW WITH CONSECUTIVE STEPS
+
+########################
+
+1. [ALL] Put data files in "data/" with the following names: "known.csv" for all known data and "unknown.csv" for the unknown data from the public leaderboard.
+
+########################
+
+2. [PERSON 1-2] Load the data and fill out the "code_0_parameters.R" with variable names. Next, run "code_1_data_prep.R", check and save the partitioned data set, push all changes.
+
+2. [PERSON 3] Edit function "create_submission.R" such that it creates the right submission. Push.
+
+2. [PERSON 4] Checks the evaluation metrics (is it available in library "Metrics"? How to call it?). Update the function "compute_accuracy.R". Pay attention to variable type (factors/numerics). Push.
+
+#########################
+
+3. [ALL] Pull everything from GitHub.
+
+#########################
+
+4. [PERSON 1] Open "code_3_xgboost.R". Launch xgboost on the raw data, launch xgboost on the data with automated features. Save predictions in "pred_valid" and "pred_unknown" using the function "create_submission.R". Save variable importance of the models. Join person 4 while waiting for models.
+
+4. [PERSON 2] Open "code_4_other_models.R". Launch a model library with several algorithms on the raw data. Save predictions in "pred_valid" and "pred_unknown" using the function "create_submission.R". Join person 4 while waiting for models. 
+
+4. [PERSON 3] If task is classification - create two submissions: all zeroes and all ones. Submit, compare accuracy, make conclusions about class balance in the unknown data. Compare it with the known data. Keep it in mind for later. Join person 4 when finished.
+
+4. [PERSON 4] Open "code_2_data_prep.R". Think about new features. Pay attention to names, sorting, format (data.frame or data.table). Discuss ideas. Write codes in the corresponding sections of "code_2_data_prep.R". 
+
+#########################
+
+5. [ALL] Push codes with new features. Wait for all to do that, pull and hope that everything merges.
+
+##########################
+
+6. [PERSON 1-2] Submit predictions of xgboost and other models from step 4. Compare results on validation and leaderboard. Decide if we use xgboost or other method.
+
+6. [PERSON 3] Run "code_2_data_prep.R" and create features from all persons + automated features. Save the prepared data set and push it. 
+
+##########################
+
+7. [ALL] Pull the prepared data set.
+
+##########################
+
+8. [ALL] Look at variable importance from xgboosts in step 4. Decide what can we definitely drop. Write these names in "code_0_parameters.R". Push an pull.
+
+##########################
+
+9. [PERSON 1] Launch xgboost in "code_3_xgboost.R" with all features except the ones we drop. Predict validation and unknown data, create submissions, upload them.
+
+9. [PERSON 2] Open "code_6_grid_search.R". Launch grid search for some xgboost parameters. Compare the results, save optimal parameter values in "code_0_parameters.R"
+
+9. [PERSON 3] Launch ensembles in "code_5_ensembles.R".
