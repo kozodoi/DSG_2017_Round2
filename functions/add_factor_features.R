@@ -10,7 +10,7 @@
 ################################################################################################
 
 # introducing the function 
-add_factor_features <- function(train, valid, target, factors, stats, all_factors = F, all_stats = F, smooth = 10) {
+add_factor_features <- function(train, valid, target, factors = NULL, stats = NULL, all_factors = F, all_stats = F, smooth = 10) {
   
   
   ##### PREPARATIONS
