@@ -1,4 +1,4 @@
-modelsLib = function(formula, train, valid, modellist = c("RF"), model_setup, 
+modelsLib = function(formula, data, train_idx, valid_idx, modellist = c("RF"), model_setup, 
                      metric , model_control = NULL, preProcess = NULL) {
   list.of.packages <- c("doParallel","foreach", "caret")
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -19,7 +19,7 @@ modelsLib = function(formula, train, valid, modellist = c("RF"), model_setup,
 
   # Specify model estimation control settings, as given in the paper
   if (is.null(model_control)) {
-    model_control = trainControl(method = "cv", index= data_train, indexOut = valid, verboseIter = TRUE,
+    model_control = trainControl(method = "cv", index= train_idx, indexOut = valid_idx, verboseIter = TRUE,
                                  savePredictions = FALSE, classProbs = TRUE, returnData = FALSE)
   }
   
