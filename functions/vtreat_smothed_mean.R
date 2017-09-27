@@ -65,6 +65,9 @@ vtreat_vars = function(data, label, treatplan, pruneLevel=NULL){
 
 smoothed_mean_per_group <- function(data_train, data_valid, target_name, var_groups, alpha){
   
+  data_valid_label = data_valid[[target_name]]
+  data_valid[[data_valid_label]]=NA
+  
   data = rbind(data_train, data_valid)
   data_in = data.table(data)
   length_train = dim(data_train)[1]
@@ -115,6 +118,7 @@ smoothed_mean_per_group <- function(data_train, data_valid, target_name, var_gro
   
   train = data_in[c(1:length_train),]
   valid = data_in[-c(1:length_train),]
+  valid[[data_valid_label]]=data_valid_label
   
   return(list(train = train, valid = valid))
   
@@ -175,6 +179,7 @@ smoothed_mean_per_group_by_pos <- function(data_in, target_name, var_groups, alp
 
 #calculate moments of a fature (that correlates with target) pe defined groups
 moments_per_group_on_real_corelated_var <- function(data_train, data_valid, corelated_real_var, var_groups){
+  
   data = rbind(data_train, data_valid)
   data_in = data.table(data)
   length_train = dim(data_train)[1]
