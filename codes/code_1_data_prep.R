@@ -36,7 +36,7 @@ source(file.path(code.folder, "code_0_parameters.R"))
 ###################################
 
 # loading data and creating IDs
-data_known =  read.csv(file.path(data.folder, "known.csv"), sep = ",", dec = ".", header = TRUE)
+data_known =  read.csv(file.path(data.folder, "known.csv"), sep = ",", dec = ".", header = TRUE, stringsAsFactors = F)
 data_known$id = seq(1,nrow(data_known))
 
 # converting features
@@ -45,7 +45,7 @@ data_known[fac_vars] <- lapply(data_known[fac_vars], function(x) factor(x))
 #data_known[dat_vars] <- lapply(data_known[dat_vars], function(x) as.Date(x, origin = '1971-01-01'))
 
 # random data partitioning
-idx <-  caret::createDataPartition(data_known$id, p = 0.8, list = FALSE)
+idx <-  caret::createDataPartition(data_known[,dv], p = 0.8, list = FALSE)
 data_known[idx, "part"] <-  "train" 
 data_known[-idx,"part"] <-  "valid" 
 
