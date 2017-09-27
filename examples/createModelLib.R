@@ -19,8 +19,8 @@ modelsLib = function(formula, data, train_idx, valid_idx, modellist = c("RF"), m
 
   # Specify model estimation control settings, as given in the paper
   if (is.null(model_control)) {
-    model_control = trainControl(method = "cv", index= train_idx, indexOut = valid_idx, verboseIter = TRUE,
-                                 savePredictions = FALSE, classProbs = TRUE, returnData = FALSE)
+    model_control = trainControl(method = "cv", number = 1,index= train_idx, indexOut = valid_idx, verboseIter = TRUE,
+                                 savePredictions = T, classProbs =F, returnData = FALSE)
   }
   
   
