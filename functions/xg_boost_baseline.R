@@ -63,7 +63,7 @@ base_line_model_xgboost_with_parameter_search = function(data_train, train_label
                     #showsd = TRUE, 
                     #metrics=metrics
                     
-                    
+                    #nthread = 3,      # parallel computing
                     #num_class=2,
                     eta = currentEta,
                     colsample_bytree = currentColsampleRate,
@@ -114,6 +114,7 @@ base_line_model_xgboost_with_parameter_search = function(data_train, train_label
                     #gamma = 1,
                     max_depth = best.parameters$max_depth, 
                     #min_child_weight = 1,
+                    # nthread = 4, # multithreding
                     subsample = best.parameters$subsample
     ), 
     metrics)
@@ -165,6 +166,7 @@ base_line_model = function(data_train, train_label, data_valid, valid_label, tar
   watchlist <- list(train=DMMatrixTrain, test=DMMatrixTest)
   
   param <- c(list( booster="gbtree", 
+                   #nthread = 4,
                 objective=obje 
                 #scale_pos_weight=scale_pos_weight,,
                 ),
