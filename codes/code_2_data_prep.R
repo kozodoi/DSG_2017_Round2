@@ -77,17 +77,17 @@ data_valid <- data_known$valid
 
 #adding moments per groups for correlated variabel (Alex) 
 #don't use target as "corelated_real_var" since function does no smoothing
-data_known = moments_per_group_on_real_corelated_var(data_train, data_valid, corelated_real_var = "Age", list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")))
+data_known <-  moments_per_group_on_real_corelated_var(data_train, data_valid, corelated_real_var = "Age", list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")))
 data_train <- data_known$train
 data_valid <- data_known$valid
 
 #adding smoothed mean per groups (Alex)
 # here we calculate the mean only for the target variable per groups 
-data_known = smoothed_mean_per_group(data_train = data_train, data_valid = data_valid, target_name = dv, var_groups = list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")), alpha = 10)
+data_known <-  smoothed_mean_per_group(data_train = data_train, data_valid = data_valid, target_name = dv, var_groups = list(c("PassengerId", "Survived"), c("PassengerId", "Pclass")), alpha = 10)
 data_train <- data_known$train
 data_valid <- data_known$valid
 
 
 # saving data as .RDA
-save(data_train, file = file.path(data.folder, "data_train_prepared.rda"))
-save(data_valid, file = file.path(data.folder, "data_valid_prepared.rda"))
+save(data_train, file <-  file.path(data.folder, "data_train_prepared.rda"))
+save(data_valid, file <-  file.path(data.folder, "data_valid_prepared.rda"))

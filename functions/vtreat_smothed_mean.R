@@ -16,39 +16,60 @@ split_dataset<-function(data, prozent_train){
 #too many categorical levels, rare categorical levels, and new categorical levels 
 #(levels seen during application, but not during training). 'vtreat::prepare' should be used as you would use 'model.matrix'.
 
-vtreat_vars = function(data){
+create_vtreat_treatPlan = function(data_train, label, binary_class=TRUE){
+  features = names(data_train)[ !names(data_train) %in% c(label) ]
+  if(binary_class){
+    treatmentPlan = designTreatmentsC(data_train, varlist = features, outcomename = label, outcometarget = TRUE)
+  }else{
+    treatmentPlan = designTreatmentsN(data_train, varlist = features, outcomename = label)
+  }
+  return(treatmentPlan)
+}
+
+
+vtreat_vars = function(data, label, treatplan, pruneLevel=NULL){
   #EXAMPLE:
   #library(vtreat)
   #label = data.table.full$is_listened
   #dframe_treat = vtreat_vars(data.table.full[,-"is_listened"])
   #dframe_treat$is_listened=label
   
-  features = colnames(data)
+  features = names(data_train)[ !names(data_train) %in% c(label) ]
   #target_var = data[,vars_to_save]
   
-  treatplan <- designTreatmentsZ(data, features)
-  #data.treat <- prepare(treatplan, data)
+  #treatplan <- designTreatmentsZ(data, features)
+  
   # Examine the scoreFrame
   scoreFrame <- treatplan$scoreFrame %>% select(varName, origName, code)
+  
   # We only want the rows with codes "clean" or "lev"
   newvars <- (scoreFrame %>% filter(code %in% c("clean", "lev")))$varName
   # Create the treated training data
   dframe.treat <- prepare(treatplan, data, varRestriction = newvars)
-  str(dframe.treat)
-  
+  #str(dframe.treat)
   #dframe.treat[,vars_to_save]=target_var
   
   return(dframe.treat)
 }
 
+
+
+
+
+
+
+
 #compute smoothed mean of the targetvariable per defined group and stoes it in new variables, smoothed to avoid overfiting.
 #var_groups is list(c ( ,), c( , ) ...)
 # target values of the test set should be set to "NA". 
 
-smoothed_mean_per_group <- function(data_in, target_name, var_groups, alpha){
-  #data_in = data.table(data)
+smoothed_mean_per_group <- function(data_train, data_valid, target_name, var_groups, alpha){
   
-  global_target_mean=mean( data_in[!(is.na(get(target_name))), get(target_name), ])
+  data = rbind(data_train, data_valid)
+  data_in = data.table(data)
+  length_train = dim(data_train)[1]
+  
+  global_target_mean=mean( data_in[ , get(target_name), ], na.rm = TRUE )
   
   
   for (group in var_groups){
@@ -65,6 +86,8 @@ smoothed_mean_per_group <- function(data_in, target_name, var_groups, alpha){
       data_in[!(is.na((get(target_name)))), eval(new_var_name) := ((mean((get(target_name)))*.N)+(global_target_mean*alpha))/(.N+alpha), by=c(eval(a), eval(b))]
       data_in[is.na(get(target_name)), eval(new_var_name):=0]
       data_in[, eval(new_var_name) := max(get(new_var_name)), by=c(eval(a), eval(b))]
+      
+      
     } else if(length(group_in)==3){  
       print("Group:")
       a =group_in[1]
@@ -73,6 +96,8 @@ smoothed_mean_per_group <- function(data_in, target_name, var_groups, alpha){
       print(a)
       print(b)
       new_var_name = paste(a,b,c, sep = "_")
+      
+      #data_in[, eval(new_var_name) = ((mean(get(corelated_real_var), na.rm = TRUE)*.N)+(global_target_mean*alpha))/(.N+alpha) , by=c(eval(a), eval(b), eval(c))]
       
       data_in[!(is.na((get(target_name)))), eval(new_var_name) := ((mean((get(target_name)))*.N)+(global_target_mean*alpha))/(.N+alpha), by=c(eval(a), eval(b), eval(c))]
       data_in[is.na(get(target_name)), eval(new_var_name):=0]
@@ -86,7 +111,13 @@ smoothed_mean_per_group <- function(data_in, target_name, var_groups, alpha){
     
     
   }
-  return(data_in)
+  
+  
+  train = data_in[c(1:length_train),]
+  valid = data_in[-c(1:length_train),]
+  
+  return(list(train = train, valid = valid))
+  
   
 }
 
@@ -106,11 +137,17 @@ smoothed_mean_per_group_by_pos <- function(data_in, target_name, var_groups, alp
       print("Group:")
       print(a)
       print(b)
+      
       new_var_name = paste(a,b, "_by_pos", sep = "_")
+      
+      
       
       data_in[!(is.na((get(target_name)))), eval(new_var_name) := (mean((get(target_name)))+(global_target_mean*alpha))/(sum(get(target_name))+alpha), by=c(eval(a), eval(b))]
       data_in[is.na(get(target_name)), eval(new_var_name):=0]
       data_in[, eval(new_var_name) := max(get(new_var_name)), by=c(eval(a), eval(b))]
+      
+      
+      
     } else if (length(group_in)==3)
     {
       print("Group:")
@@ -160,12 +197,12 @@ moments_per_group_on_real_corelated_var <- function(data_train, data_valid, core
       max = paste(a,b,corelated_real_var, "_max", sep = "_")
       
       data_in[, c(mean,min,lower, middle,upper,max ):= list(
-        mean(get(corelated_real_var)),
-        min(get(corelated_real_var)),
+        mean(get(corelated_real_var), na.rm = TRUE),
+        min(get(corelated_real_var) , na.rm = TRUE),
         quantile(get(corelated_real_var), .25, na.rm=TRUE),
         quantile(get(corelated_real_var), .50, na.rm=TRUE),
         quantile(get(corelated_real_var), .75, na.rm=TRUE),
-        max(get(corelated_real_var))),
+        max(get(corelated_real_var), na.rm = TRUE )),
         by=c(eval(a), eval(b))]
       
       
@@ -212,7 +249,7 @@ moments_per_group_on_real_corelated_var <- function(data_train, data_valid, core
   train = data_in[c(1:length_train),]
   valid = data_in[-c(1:length_train),]
   
-  return(list(train, valid))
+  return(list(train = train, valid = valid))
   
 }
 

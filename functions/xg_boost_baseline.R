@@ -1,5 +1,5 @@
 
-base_line_model_xgboost = function(data_train, train_label, data_test, test_label, target, best_model=FALSE, nrounds = 100, type = "r"){
+base_line_model_xgboost_with_parameter_search = function(data_train, train_label, data_test, test_label, target, best_model=FALSE, nrounds = 100, type = "r"){
   
   
   obje= "reg:linear"
@@ -7,7 +7,7 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
                  eval_metric="logloss" 
   )
   #best_model_parameter = "rmse"
-  optimizer =  "which.min(rmseErrorsHyperparameters$rmse)"
+  optimizer =  "which.min(ErrorsHyperparameters$rmse)"
   
   if(type == "c"){
     obje= "binary:logistic"
@@ -16,7 +16,7 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
                    eval_metric="auc"
     )
     #best_model_parameter = "auc"
-    optimizer =  "which.max(rmseErrorsHyperparameters$auc)"
+    optimizer =  "which.max(ErrorsHyperparameters$auc)"
   }
   
   
@@ -24,11 +24,7 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
   
   data_train[[target]]=NULL
   data_test[[target]]=NULL
-  data = rbind(data_train, data_test)
-  dframe_treat = vtreat_vars(data)
   
-  dframe_treat_train = dframe_treat[1:size_train,] #train
-  dframe_treat_test = dframe_treat[- c(1:size_train),] #test
   
   
   #subset for now
@@ -46,8 +42,8 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
   
   
   #Build a xgb.DMatrix object
-  DMMatrixTrain <- xgb.DMatrix(data = as.matrix(dframe_treat_train), label = train_label)
-  DMMatrixTest <- xgb.DMatrix(data = as.matrix(dframe_treat_test), label = test_label)
+  DMMatrixTrain <- xgb.DMatrix(data = as.matrix(data_train), label = train_label)
+  DMMatrixTest <- xgb.DMatrix(data = as.matrix(data_test), label = test_label)
   
   watchlist <- list(train=DMMatrixTrain, test=DMMatrixTest)
   
@@ -135,3 +131,53 @@ base_line_model_xgboost = function(data_train, train_label, data_test, test_labe
   return( list(best_parameters = best.parameters, result = ErrorsHyperparameters, fin_best_model = fin_best_model  ))
   
 }
+
+
+
+
+
+
+
+base_line_model = function(data_train, train_label, data_valid, valid_label, target, nrounds = 100, type = "r", vtreat=TRUE){
+  
+  
+  obje= "reg:linear"
+  metrics = list(eval_metric="rmse",  eval_metric="logloss" )
+  
+  # in case of classification
+  if(type == "c"){
+    obje= "binary:logistic"
+    metrics = list(eval_metric="error", eval_metric="auc")
+  }
+  
+  data_train[[target]]=NULL
+  data_valid[[target]]=NULL
+
+  
+  #subset for now
+  #dtrain_custsearch_subset = dtrain_custsearch[sample.int(n = nrow(dtrain_custsearch), size = floor(.01*nrow(dtrain_custsearch)), replace = F), ]
+  
+  
+  #Build a xgb.DMatrix object
+  DMMatrixTrain <- xgb.DMatrix(data = as.matrix(data_train), label = train_label)
+  DMMatrixTest <- xgb.DMatrix(data = as.matrix(data_valid), label = valid_label)
+  
+  watchlist <- list(train=DMMatrixTrain, test=DMMatrixTest)
+  
+  param <- c(list( booster="gbtree", 
+                objective=obje 
+                #scale_pos_weight=scale_pos_weight,,
+                ),
+                metrics)
+  
+  xgb2 <- xgb.train(data = DMMatrixTrain,
+                    params = param,
+                    watchlist=watchlist,
+                    # nrounds = xgb2cv$best_ntreelimit
+                    nrounds = nrounds
+  )
+  
+  return( xgb2 )
+  
+}
+
