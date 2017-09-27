@@ -6,14 +6,11 @@ set.seed(213)
 ## Dependent variable name
 dv <- "Survived"
 
-## ID variable
-id <- "id"
-
 ## Variables types
 num_vars <- c("Age")  # numeric
 fac_vars <- c("Pclass", "Sex", "Embarked")  # factors
 dat_vars <- c("")  # dates
-ign_vars <- c("")  # ignore variables
+ign_vars <- c("part", 'id')  # ignore variables of id and partitioning
 
 ## Variables which we drop from the xgboost
 drop_vars <- c("")
