@@ -110,9 +110,12 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
   ### merging stats with validation
   if (length(c(factors, current.stats)) > 0) {
     for (factor in factors) {
-      factor_levels <- train[, c(factor, current.stats[grepl(factor, current.stats)])]
+      
+      calc_stats <- paste0(target, '_', factor, "_", stats)
+      factor_levels <- train[, c(factor, calc_stats)] 
       factor_levels <- factor_levels[!duplicated(factor_levels), ]
-      valid <- join(valid, factor_levels, type = "left")
+      valid <- plyr::join(valid, factor_levels, by = factor, type = "left")
+      
     }
   }
   
