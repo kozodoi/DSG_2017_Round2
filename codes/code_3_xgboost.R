@@ -85,6 +85,26 @@ data_train   <- data_known$train
 data_valid   <- data_known$valid
 data_unknown <- data_unknown$valid
 
+
+
+
+#adding moments per groups for correlated variabel (Alex) 
+#don't use target as "corelated_real_var" since function does no smoothing
+data_unknown <-  moments_per_group_on_real_corelated_var(data_train, data_unknown, corelated_real_var = "Age", list(c("PassengerId", "Pclass")))
+data_known <-  moments_per_group_on_real_corelated_var(data_train, data_valid, corelated_real_var = "Age", list(c("PassengerId", "Pclass")))
+data_train <- data_known$train
+data_valid <- data_known$valid
+data_unknown <- data_unknown$valid
+
+#adding smoothed mean per groups (Alex)
+# here we calculate the mean only for the target variable per groups 
+# data_known <-  smoothed_mean_per_group(data_train = data_train, data_valid = data_valid, target_name = dv, var_groups = list(c("Age", "Pclass")), alpha = 10)
+# data_unknown <-  smoothed_mean_per_group(data_train = data_train, data_valid = data_unknown, target_name = dv, var_groups = list( c("Age", "Pclass")), alpha = 10)
+# data_train <- data_known$train
+# data_valid <- data_known$valid
+# data_unknown <- data_unknown$valid
+
+
 # train xgboost model
 iv <- colnames(data_train)[!(colnames(data_train)%in%c(dv, ign_vars))]
 treatmentPlan <- designTreatmentsC(data_train, varlist = iv, outcomename = dv, outcometarget = TRUE)
