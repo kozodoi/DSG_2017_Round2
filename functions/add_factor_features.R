@@ -32,23 +32,23 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
   if (all_stats == T) {
     stats <- c("min", "max", "mean", "median", "size")
   }
-
+  
   # loading libraries
   if (require(pacman) == FALSE) install.packages("pacman")
   library(pacman)
-  p_load(data.table)
+  p_load(data.table, plyr)
   
   # converting to train table
   train <- as.data.table(train)
   
-
+  
   
   ##### ERRORS
   
   # checking if target is a numeric variable
   if (!class(train[[target]]) %in% c("numeric", "integer")) {
     stop("Target variable is not numeric")
-    }
+  }
   
   # checking if factors are indeed factors 
   if (sum(factors %in% names(Filter(is.factor, train))) < length(factors)) {
@@ -61,7 +61,7 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
   global_median <- median(train[[target]], na.rm = T)
   global_min    <- min(train[[target]],    na.rm = T)
   global_max    <- max(train[[target]],    na.rm = T)
-
+  
   
   ##### COMPUTING FACTOR-LEVEL STATISTICS
   for (variable in factors) {
@@ -72,7 +72,7 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
         var_name <- paste0(target, "_", variable, "_", stat)
         train[, (var_name) := (min(get(target), na.rm = T)*.N  + global_min*smooth)/(.N + smooth), by = get(variable)]
       }
-  
+      
       # computing statistics: max
       if (stat == "max") {
         var_name <- paste0(target, "_", variable, "_", stat)
@@ -90,7 +90,7 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
         var_name <- paste0(target, "_", variable, "_", stat)
         train[, (var_name) := (median(get(target), na.rm = T)*.N + global_median*smooth)/(.N + smooth), by = get(variable)]
       }
-
+      
       # computing statistics: size
       if (stat == "size") {
         var_name <- paste0(target, "_", variable, "_", stat)
@@ -107,11 +107,16 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
   train <- as.data.frame(train)
   valid <- as.data.frame(valid)
   
-  # merging stats with validation
+  ### merging stats with validation
   if (length(c(factors, current.stats)) > 0) {
-    valid <- merge(valid, train[, c(factors, current.stats)], by = factors, all.x = T, all.y = F, sort = F)
+    for (factor in factors) {
+      factor_levels <- train[, c(factor, current.stats[grepl(factor, current.stats)])]
+      factor_levels <- factor_levels[!duplicated(factor_levels), ]
+      valid <- join(valid, factor_levels, type = "left")
+    }
   }
-    
+  
+  
   ##### RETURNING THE DATA SET
   return(list(train = train, valid = valid))
 }

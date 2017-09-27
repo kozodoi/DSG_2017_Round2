@@ -22,7 +22,7 @@ subm.folder <- "submissions"
 # loading libraries
 if (require(pacman) == FALSE) install.packages("pacman")
 library(pacman)
-p_load(dplyr, data.table, caret, Metrics, xgboost, vtreat)
+p_load(dplyr, data.table, caret, Metrics, xgboost, vtreat, plyr)
 
 # loading all functions
 source(file.path(code.folder, "code_0_helper_functions.R"))
