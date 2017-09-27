@@ -19,6 +19,11 @@ data.folder <- "data"
 func.folder <- "functions"
 subm.folder <- "submissions"
 
+# additional folders
+modl.folder <- 'models'
+knwn.folder <- 'known_predictions'
+smpl.folder <- 'sample'
+
 # loading libraries
 if (require(pacman) == FALSE) install.packages("pacman")
 library(pacman)
