@@ -49,17 +49,17 @@ data_unknown <- read.csv(file.path(data.folder, "unknown.csv"), sep = ",", dec =
 data_unknown$id <- seq(1,nrow(data_unknown))
 
 # converting features
-data_known[num_vars]   <- lapply(data_known[num_vars], function(x) as.numeric(as.character(x))) 
-data_unknown[num_vars] <- lapply(data_unknown[num_vars], function(x) as.numeric(as.character(x))) 
-data_known[fac_vars]   <- lapply(data_known[fac_vars], function(x) factor(x))
-data_unknown[fac_vars] <- lapply(data_unknown[fac_vars], function(x) factor(x))
-#data_known[dat_vars]  <- lapply(data_known[dat_vars], function(x) as.Date(x, origin = '1971-01-01'))
+data_known[num_vars]    <- lapply(data_known[num_vars],   function(x) as.numeric(as.character(x))) 
+data_unknown[num_vars]  <- lapply(data_unknown[num_vars], function(x) as.numeric(as.character(x))) 
+data_known[fac_vars]    <- lapply(data_known[fac_vars],   function(x) factor(x))
+data_unknown[fac_vars]  <- lapply(data_unknown[fac_vars], function(x) factor(x))
+#data_known[dat_vars]   <- lapply(data_known[dat_vars],   function(x) as.Date(x, origin = '1971-01-01'))
 #data_unknown[dat_vars] <- lapply(data_unknown[dat_vars], function(x) as.Date(x, origin = '1971-01-01'))
 
 # random data partitioning
-idx <-  caret::createDataPartition(data_known[,dv], p = 0.8, list = FALSE)
-data_known[idx, "part"] <-  "train" 
-data_known[-idx,"part"] <-  "valid" 
+idx <-  caret::createDataPartition(data_known[, dv], p = 0.8, list = FALSE)
+data_known[idx, "part"] <- "train" 
+data_known[-idx,"part"] <- "valid" 
 
 # saving data as .RDA
 save(data_known,   file = file.path(data.folder, "data_partitioned.rda"))

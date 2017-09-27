@@ -95,8 +95,5 @@ data_train <- data_known$train
 data_valid <- data_known$valid
 
 # saving data as .RDA
-save(data_train, file <-  file.path(data.folder, "data_train_prepared.rda"))
-save(data_valid, file <-  file.path(data.folder, "data_valid_prepared.rda"))
-
-
-
+save(data_train, file <- file.path(data.folder, "data_train_prepared.rda"))
+save(data_valid, file <- file.path(data.folder, "data_valid_prepared.rda"))

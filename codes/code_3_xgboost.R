@@ -43,12 +43,10 @@ load(file.path(data.folder, "data_unknown.rda"))
 data_train <- data_known[data_known$part == "train", ]
 data_valid <- data_known[data_known$part == "valid", ]
 
-
-# train xgboost model
-#! handles only numerical values, therefor vtreat as encoder
-treatmentPlan <-  create_vtreat_treatPlan(data_train = data_train, label = dv, binary_class = TRUE)
-data_train_treat <-  vtreat_vars(data = data_train, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
-data_valid_treat <- vtreat_vars(data = data_valid, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
+# vtreat as encoder
+treatmentPlan      <- create_vtreat_treatPlan(data_train = data_train, label = dv, binary_class = TRUE)
+data_train_treat   <- vtreat_vars(data = data_train, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
+data_valid_treat   <- vtreat_vars(data = data_valid, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
 data_unknown_treat <- vtreat_vars(data = data_unknown, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
 
 # model
@@ -58,6 +56,10 @@ model1 <- base_line_model(data_train = data_train_treat, train_label = data_trai
 pred <-  predict(model1, as.matrix( data_valid_treat[, !names(data_valid_treat) %in% c(dv)] ))
 prediction <- as.numeric(pred > 0.5)
 auc(data_valid_treat[[dv]], prediction)
+
+# variable importance
+varimp <- xgb.importance(colnames(data_train_treat), model1)
+xgb.plot.importance(importance_matrix = varimp)
 
 # predict unknown data
 pred1 <- predict(model1, as.matrix( data_unknown_treat[, !names(data_valid_treat) %in% c(dv)] ))
@@ -85,12 +87,10 @@ data_train   <- data_known$train
 data_valid   <- data_known$valid
 data_unknown <- data_unknown$valid
 
-# train xgboost model
+# vtreat as encoder
 iv <- colnames(data_train)[!(colnames(data_train)%in%c(dv, ign_vars))]
 treatmentPlan <- designTreatmentsC(data_train, varlist = iv, outcomename = dv, outcometarget = TRUE)
 #treatmentPlan <- designTreatmentsN(data_train, varlist = iv, outcomename = dv, outcometarget = TRUE)
-
-# vtreat
 data_train_treat   <- vtreat_vars(data = data_train,   label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
 data_valid_treat   <- vtreat_vars(data = data_valid,   label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
 data_unknown_treat <- vtreat_vars(data = data_unknown, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
@@ -103,14 +103,13 @@ pred2 <-  predict(model2, as.matrix( data_valid_treat[, !names(data_valid_treat)
 prediction2 <- as.numeric(pred2 > 0.5)
 auc(data_valid_treat[[dv]], prediction2)
 
+# variable importance
 varimp <- xgb.importance(colnames(data_train_treat), model2)
 xgb.plot.importance(importance_matrix = varimp)
 
 # predict unknown data
 pred2 <- predict(model2, as.matrix( data_unknown_treat[, !names(data_valid_treat) %in% c(dv)] ))
 submit(pred2, data = data_unknown, id.var = "PassengerId", target.var = "Survived", folder = subm.folder, file = "test_fare.csv", binary = T)
-
-
 
 
 ###################################
@@ -122,10 +121,3 @@ submit(pred2, data = data_unknown, id.var = "PassengerId", target.var = "Survive
 # loading the prepared data
 load(file.path(data.folder, "data_train_prepared.rda"))
 load(file.path(data.folder, "data_valid_prepared.rda"))
-
-
-# train xgboost model
-# predict validation data
-# compute accuracy
-# predict unknown data
-# submit predictions
