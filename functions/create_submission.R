@@ -11,7 +11,7 @@
 ###################################################################
 
 # introducing the function 
-submit <- function(prediction, data, id.var, target.var, folder, file = "submission_test.csv") {
+submit <- function(prediction, data, id.var, target.var, folder, file = "submission_test.csv", binary = F) {
   
   # converting to data frame
   data <- as.data.frame(data)
@@ -19,12 +19,18 @@ submit <- function(prediction, data, id.var, target.var, folder, file = "submiss
   # displaying error messages
   if (length(prediction) != nrow(data)) {stop("Predictions and dataset are not the same length")}
   
+  if (binary == T) {
+    prediction <- as.numeric(prediction > 0.5)
+  }
+  
+  
   # adding predictions to the data
   data[[target.var]] <- prediction
   
   # creating dataset with relevant coloumns
   data <- data[, c(id.var, target.var)]
   
+
   # exporting predictions
   write.table(data, row.names = F, col.names = T, quote = F, sep = ",", file = file.path(folder, file))
 }

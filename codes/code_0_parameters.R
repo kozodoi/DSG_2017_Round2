@@ -10,7 +10,7 @@ dv <- "Survived"
 num_vars <- c("Age")  # numeric
 fac_vars <- c("Pclass", "Sex", "Embarked")  # factors
 dat_vars <- c("")  # dates
-ign_vars <- c("part", 'id')  # ignore variables of id and partitioning
+ign_vars <- c("part", 'id', "PassengerId")  # ignore variables of id and partitioning
 
 ## Variables which we drop from the xgboost
 drop_vars <- c("")
