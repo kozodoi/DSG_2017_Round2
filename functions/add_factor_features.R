@@ -115,7 +115,6 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
       factor_levels <- train[, c(factor, calc_stats)] 
       factor_levels <- factor_levels[!duplicated(factor_levels), ]
       valid <- plyr::join(valid, factor_levels, by = factor, type = "left")
-      
     }
   }
   

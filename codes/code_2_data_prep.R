@@ -35,8 +35,11 @@ source(file.path(code.folder, "code_0_parameters.R"))
 #                                 #
 ###################################
 
-# loading the data
+# loading data
 load(file.path(data.folder, "data_partitioned.rda"))
+load(file.path(data.folder, "data_unknown.rda"))
+
+
 
 # Comment Alex: need store the labels of the test subset in a seperate vector first and set the label column to NAs#
 #==================================================================================================================#
@@ -66,14 +69,18 @@ data_train <- data_known[data_known$part == "train", ]
 data_valid <- data_known[data_known$part == "valid", ]
 
 # adding factor features (Nikita)
-data_known <- add_factor_features(data_train, data_valid, target = dv, smooth = 10)
-data_train <- data_known$train
-data_valid <- data_known$valid
+data_unknown <- add_factor_features(data_train, data_unknown, target = dv, smooth = 10)
+data_known   <- add_factor_features(data_train, data_valid,   target = dv, smooth = 10)
+data_train   <- data_known$train
+data_valid   <- data_known$valid
+data_unknown <- data_unknown$valid
 
 # scaling data
-data_known <- scale_data(data_train, data_valid, type = "minmax", except = c(dv, id))
-data_train <- data_known$train
-data_valid <- data_known$valid
+data_unknown <- scale_data(data_train, data_unknown, type = "minmax", except = c(dv, ign_vars))
+data_known   <- scale_data(data_train, data_valid,   type = "minmax", except = c(dv, ign_vars))
+data_unknown <- data_unknown$valid
+data_train   <- data_known$train
+data_valid   <- data_known$valid
 
 #adding moments per groups for correlated variabel (Alex) 
 #don't use target as "corelated_real_var" since function does no smoothing
@@ -87,7 +94,9 @@ data_known <-  smoothed_mean_per_group(data_train = data_train, data_valid = dat
 data_train <- data_known$train
 data_valid <- data_known$valid
 
-
 # saving data as .RDA
 save(data_train, file <-  file.path(data.folder, "data_train_prepared.rda"))
 save(data_valid, file <-  file.path(data.folder, "data_valid_prepared.rda"))
+
+
+
