@@ -44,9 +44,11 @@ data_train <- data_known[data_known$part == "train", ]
 data_valid <- data_known[data_known$part == "valid", ]
 
 # vtreat as encoder
-treatmentPlan      <- create_vtreat_treatPlan(data_train = data_train, label = dv, binary_class = TRUE)
-data_train_treat   <- vtreat_vars(data = data_train, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
-data_valid_treat   <- vtreat_vars(data = data_valid, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
+iv <- colnames(data_train)[!(colnames(data_train)%in%c(dv, ign_vars))]
+treatmentPlan <- designTreatmentsC(data_train, varlist = iv, outcomename = dv, outcometarget = TRUE)
+#treatmentPlan <- designTreatmentsN(data_train, varlist = iv, outcomename = dv, outcometarget = TRUE)
+data_train_treat   <- vtreat_vars(data = data_train,   label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
+data_valid_treat   <- vtreat_vars(data = data_valid,   label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
 data_unknown_treat <- vtreat_vars(data = data_unknown, label = dv, treatplan = treatmentPlan, pruneLevel = NULL)
 
 # model
@@ -87,17 +89,13 @@ data_train   <- data_known$train
 data_valid   <- data_known$valid
 data_unknown <- data_unknown$valid
 
-<<<<<<< HEAD
-
-
-
 #adding moments per groups for correlated variabel (Alex) 
 #don't use target as "corelated_real_var" since function does no smoothing
-data_unknown <-  moments_per_group_on_real_corelated_var(data_train, data_unknown, corelated_real_var = "Age", list(c("PassengerId", "Pclass")))
-data_known <-  moments_per_group_on_real_corelated_var(data_train, data_valid, corelated_real_var = "Age", list(c("PassengerId", "Pclass")))
-data_train <- data_known$train
-data_valid <- data_known$valid
-data_unknown <- data_unknown$valid
+#data_unknown <-  moments_per_group_on_real_corelated_var(data_train, data_unknown, corelated_real_var = "Age", list(c("PassengerId", "Pclass")))
+#data_known <-  moments_per_group_on_real_corelated_var(data_train, data_valid, corelated_real_var = "Age", list(c("PassengerId", "Pclass")))
+#data_train <- data_known$train
+#data_valid <- data_known$valid
+#data_unknown <- data_unknown$valid
 
 #adding smoothed mean per groups (Alex)
 # here we calculate the mean only for the target variable per groups 
@@ -107,11 +105,7 @@ data_unknown <- data_unknown$valid
 # data_valid <- data_known$valid
 # data_unknown <- data_unknown$valid
 
-
-# train xgboost model
-=======
 # vtreat as encoder
->>>>>>> 4d95ba874bb953bdd73e494d802933b794b2dbff
 iv <- colnames(data_train)[!(colnames(data_train)%in%c(dv, ign_vars))]
 treatmentPlan <- designTreatmentsC(data_train, varlist = iv, outcomename = dv, outcometarget = TRUE)
 #treatmentPlan <- designTreatmentsN(data_train, varlist = iv, outcomename = dv, outcometarget = TRUE)
