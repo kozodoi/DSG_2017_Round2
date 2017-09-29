@@ -54,7 +54,7 @@ data_unknown[num_vars]  <- lapply(data_unknown[num_vars], function(x) as.numeric
 data_known[fac_vars]    <- lapply(data_known[fac_vars],   function(x) factor(x))
 data_unknown[fac_vars]  <- lapply(data_unknown[fac_vars], function(x) factor(x))
 data_known[dat_vars]   <- lapply(data_known[dat_vars],   function(x) as.Date.character(x, format = '%Y-%m-%d'))
-data_unknown[dat_vars] <- lapply(data_unknown[dat_vars], function(x) as.Date(x, format = '%Y-%m-%d'))
+data_unknown[dat_vars] <- lapply(data_unknown[dat_vars], function(x) as.Date.character(x, format = '%Y-%m-%d'))
 
 # saving data as .RDA
 save(data_known,   file = file.path(data.folder, "data_known.rda"))
