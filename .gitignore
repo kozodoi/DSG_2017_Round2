@@ -21,3 +21,4 @@ data/DSG_DataDictionary_20170905.xlsx
 data/eval.csv
 data/sample_submission.csv
 data/eval_correct.csv
+data/data_known_noNAs_first.rda
