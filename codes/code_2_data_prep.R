@@ -40,7 +40,6 @@ load(file.path(data.folder, "data_known.rda"))
 load(file.path(data.folder, "data_unknown.rda"))
 
 
-
 # Comment Alex: need store the labels of the test subset in a seperate vector first and set the label column to NAs#
 #==================================================================================================================#
 
@@ -49,7 +48,7 @@ load(file.path(data.folder, "data_unknown.rda"))
 
 
 ##### CODES FOR NEW FEATURES: NATALIA
-
+data_known[(grep('COMP_PRICE', colnames(data_known)))] <- apply(data_known[(grep('COMP_PRICE', colnames(data_known)))], 1, function(x) ifelse(is.na(x), 0, x))
 
 ##### CODES FOR NEW FEATURES: NIKITA
 
