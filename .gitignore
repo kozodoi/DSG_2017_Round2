@@ -13,3 +13,10 @@ pred_public/.DS_Store
 data/known.csv
 data/public.csv
 data/private.csv
+
+data/data_unknown.rda
+data/data_known.rda
+data/demand_anonymized_20170802.csv
+data/DSG_DataDictionary_20170905.xlsx
+data/eval.csv
+data/sample_submission.csv
