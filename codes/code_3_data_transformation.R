@@ -36,7 +36,8 @@ source(file.path(code.folder, "code_0_parameters.R"))
 ###################################
 
 # loading data
-load(file.path(data.folder, "data_known_prepared.rda"))
+load(file.path(data.folder, "data_known_noNAs_first.rda"))
+data_known <- as.data.frame(data_known)
 
 # finding all numeric features
 numeric.vars <- names(sapply(data_known, class)[sapply(data_known, class) %in% c("numeric", "integer")])
@@ -45,7 +46,7 @@ known_num <- data_known[, c(numeric.vars, "Month", "SalOrg", "Material")]
 
 # aggregating sums and means
 sums  <- aggregate(OrderQty ~ Month + SalOrg + Material, data = known_num, function(x) sum(x, na.rm = T)) 
-means <- aggregate(.        ~ Month + SalOrg + Material, data = known_num, function(x) sum(x, na.rm = T)) 
+means <- aggregate(.        ~ Month + SalOrg + Material, data = known_num, function(x) sum(x, na.rm = T))
 
 # renaming demand
 means <- means[, !(colnames(means) %in% "OrderQty")]
@@ -69,4 +70,4 @@ known <- known[, !(colnames(known) %in% "N")]
 known$demand[is.na(known$demand)] <- 0
 
 # saving data as .RDA
-save(known, file <- file.path(data.folder, "known_structured.rda"))
+save(known, file = file.path(data.folder, "known_structured_f.rda"))
