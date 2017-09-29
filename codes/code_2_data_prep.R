@@ -36,7 +36,7 @@ source(file.path(code.folder, "code_0_parameters.R"))
 ###################################
 
 # loading data
-load(file.path(data.folder, "data_partitioned.rda"))
+load(file.path(data.folder, "data_known.rda"))
 load(file.path(data.folder, "data_unknown.rda"))
 
 
