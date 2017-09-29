@@ -22,3 +22,4 @@ data/eval.csv
 data/sample_submission.csv
 data/eval_correct.csv
 data/data_known_noNAs_first.rda
+data/known_structured_19_30.rda
