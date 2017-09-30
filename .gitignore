@@ -24,3 +24,20 @@ data/eval_correct.csv
 data/data_known_noNAs_first.rda
 data/known_structured_19_30.rda
 data/agg_data_all_features_dep_vars_22_00.rda
+data/calibrationof_median.csv
+	data/calibrationof_median_more.csv
+	data/check_05.csv
+	data/check_ones.csv
+	data/counts_and_modes.rda
+	data/demand_1_plus_best.csv
+	data/demand_1_plus_best_mean.csv
+	data/demand_1_plus_best_meanof3.csv
+	data/imputed_demand.rda
+	data/moq.rda
+	data/subm_mean_boost.csv
+	data/subm_mean_boost_5models.csv
+	data/subm_mean_boost_adjusted.csv
+	data/subm_mean_boost_adjusted55.csv
+	data/subm_mean_boost_adjusted8575.csv
+	data/unknown.csv
+	data/~$DSG_DataDictionary_20170905.xlsx
