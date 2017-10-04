@@ -4,7 +4,7 @@
 set.seed(213)
 
 ## Dependent variable name
-dv <- ""
+dv <- "demand"
 
 ## Variables types
 num_vars <- c("OrderQty", "LT", "MOQ", "ROP", "SafetyStk", "Gross_Weight", "Length", "Width", "Height", "Volume",

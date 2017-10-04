@@ -36,7 +36,7 @@ source(file.path(code.folder, "code_0_parameters.R"))
 ###################################
 
 # loading data
-load(file.path(data.folder, "data_known_noNAs_first.rda"))
+load(file.path(data.folder, "known_with_depvar_20_00.rda"))
 data_known <- as.data.frame(data_known)
 
 # finding all numeric features
@@ -44,9 +44,14 @@ numeric.vars <- names(sapply(data_known, class)[sapply(data_known, class) %in% c
 numeric.vars <- numeric.vars[!numeric.vars %in% "ID"]
 known_num <- data_known[, c(numeric.vars, "Month", "SalOrg", "Material")]
 
+# finding all factor features
+facs <- names(sapply(data_known, class)[sapply(data_known, class) %in% c("factor")])
+known_fac <- data_known[, c(facs, "Month", "SalOrg", "Material")]
+
 # aggregating sums and means
-sums  <- aggregate(OrderQty ~ Month + SalOrg + Material, data = known_num, function(x) sum(x, na.rm = T)) 
-means <- aggregate(.        ~ Month + SalOrg + Material, data = known_num, function(x) sum(x, na.rm = T))
+sums  <- aggregate(OrderQty ~ Month + SalOrg + Material, data = known_num, function(x)  sum(x, na.rm = T)) 
+means <- aggregate(.        ~ Month + SalOrg + Material, data = known_num, function(x) mean(x, na.rm = T))
+mods  <- aggregate(.        ~ Month + SalOrg + Material, data = known_fac, function(x) names(sort(-table(x)))[1])
 
 # renaming demand
 means <- means[, !(colnames(means) %in% "OrderQty")]
@@ -57,17 +62,17 @@ known <- merge(means, sums, by = c("Month", "SalOrg", "Material"), all.x = F, al
 rm(list = "sums", "means")
 
 # add missing combinations
-setDT(known, key = c("Month", "SalOrg", "Material"))
-combs <- as.data.frame(known[CJ(known_num$Month, known_num$SalOrg, known_num$Material, unique = TRUE), .N, by=.EACHI])
-combs[combs$N == 0, "N"] <- NA
-combs <- combs[is.na(combs$N), ]
-colnames(combs)[4] <- "N"
-known <- merge(known, combs, all.x = T, all.y = T)
-known <- as.data.frame(known)
-known <- known[, !(colnames(known) %in% "N")]
+#setDT(known, key = c("Month", "SalOrg", "Material"))
+#combs <- as.data.frame(known[CJ(known_num$Month, known_num$SalOrg, known_num$Material, unique = TRUE), .N, by=.EACHI])
+#combs[combs$N == 0, "N"] <- NA
+#combs <- combs[is.na(combs$N), ]
+#colnames(combs)[4] <- "N"
+#known <- merge(known, combs, all.x = T, all.y = T)
+#known <- as.data.frame(known)
+#known <- known[, !(colnames(known) %in% "N")]
 
 # imputing zeros for demand
-known$demand[is.na(known$demand)] <- 0
+#known$demand[is.na(known$demand)] <- 0
 
 # saving data as .RDA
-save(known, file = file.path(data.folder, "known_structured_f.rda"))
+save(known, file = file.path(data.folder, "known_structured_19_30.rda"))

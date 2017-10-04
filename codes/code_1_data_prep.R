@@ -45,7 +45,7 @@ data_known = fread(file.path(data.folder, "demand_anonymized_20170802.csv"), sep
 data_known <- as.data.frame(data_known)
 
 # loading unknown data
-data_unknown <- fread(file.path(data.folder, "eval.csv"), sep = ",", dec = ".", header = TRUE, stringsAsFactors = F)
+data_unknown <- fread(file.path(data.folder, "eval_correct.csv"), sep = ",", dec = ".", header = TRUE, stringsAsFactors = F)
 data_unknown <- as.data.frame(data_unknown)
 
 # converting features

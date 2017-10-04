@@ -10,10 +10,12 @@
 ################################################################################################
 
 # introducing the function 
-add_factor_features <- function(train, valid, target, factors = NULL, stats = NULL, all_factors = T, all_stats = T, smooth = 10) {
+add_factor_features <- function(train, valid, targets, factors = NULL, stats = NULL, all_factors = T, all_stats = T, smooth = 10) {
   
   
   ##### PREPARATIONS
+  
+  for (target in targets) {
   
   # saving colnames
   initial.vars <- colnames(train)
@@ -30,7 +32,7 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
   
   # selecting stats if not sepcified
   if (all_stats == T) {
-    stats <- c("min", "max", "mean", "median", "size")
+    stats <- c("min", "max", "mean", "sd", "median", "size")
   }
   
   # loading libraries
@@ -61,6 +63,7 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
   global_median <- median(train[[target]], na.rm = T)
   global_min    <- min(train[[target]],    na.rm = T)
   global_max    <- max(train[[target]],    na.rm = T)
+  global_sd     <- sd(train[[target]],     na.rm = T)
   
   
   ##### COMPUTING FACTOR-LEVEL STATISTICS
@@ -91,6 +94,13 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
         train[, (var_name) := (median(get(target), na.rm = T)*.N + global_median*smooth)/(.N + smooth), by = get(variable)]
       }
       
+      # computing statistics: sd
+      if (stat == "sd") {
+        var_name <- paste0(target, "_", variable, "_", stat)
+        train[, (var_name) := (sd(get(target), na.rm = T)*.N  + global_min*smooth)/(.N + smooth), by = get(variable)]
+      }
+      
+      
       # computing statistics: size
       if (stat == "size") {
         var_name <- paste0(target, "_", variable, "_", stat)
@@ -107,9 +117,12 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
   train <- as.data.frame(train)
   valid <- as.data.frame(valid)
   
+  }
+  
   ### merging stats with validation
   if (length(c(factors, current.stats)) > 0) {
-    for (factor in factors) {
+    for (target in targets) {
+      for (factor in factors) {
       
       calc_stats <- paste0(target, '_', factor, "_", stats)
       factor_levels <- train[, c(factor, calc_stats)] 
@@ -117,6 +130,8 @@ add_factor_features <- function(train, valid, target, factors = NULL, stats = NU
       valid <- plyr::join(valid, factor_levels, by = factor, type = "left")
     }
   }
+}
+  
   
   
   ##### RETURNING THE DATA SET

@@ -3,8 +3,8 @@ base_line_model_xgboost_with_parameter_search = function(data_train, train_label
   
   
   obje= "reg:linear"
-  metrics = list(eval_metric="rmse",
-                 eval_metric="logloss" 
+  metrics = list(eval_metric="mae",
+                 eval_metric="mae" 
   )
   #best_model_parameter = "rmse"
   optimizer =  "which.min(ErrorsHyperparameters$rmse)"
@@ -33,7 +33,7 @@ base_line_model_xgboost_with_parameter_search = function(data_train, train_label
   searchGridSubCol <- expand.grid(subsample = c(0.7, 1), 
                                   colsample_bytree = c(0.6, 0.8, 1),
                                   eta = c(0.01, 0.001, 0.0001),
-                                  max_depth = c(100, 500) 
+                                  max_depth = c(5, 100, 500) 
   )
   
   #subset for now
@@ -139,29 +139,18 @@ base_line_model_xgboost_with_parameter_search = function(data_train, train_label
 
 
 
+
 base_line_model = function(data_train, train_label, data_valid, valid_label, target, nrounds = 100, type = "r", vtreat=TRUE){
   
   
   obje= "reg:linear"
-  metrics = list(eval_metric="rmse",  eval_metric="logloss" )
-  
-  # in case of classification
-  if(type == "c"){
-    obje= "binary:logistic"
-    metrics = list(eval_metric="error", eval_metric="auc")
-  }
+  metrics = list(eval_metric="mae",  eval_metric="mae" )
   
   data_train[[target]]=NULL
   data_valid[[target]]=NULL
 
-  
-  #subset for now
-  #dtrain_custsearch_subset = dtrain_custsearch[sample.int(n = nrow(dtrain_custsearch), size = floor(.01*nrow(dtrain_custsearch)), replace = F), ]
-  
-  
-  #Build a xgb.DMatrix object
   DMMatrixTrain <- xgb.DMatrix(data = as.matrix(data_train), label = train_label)
-  DMMatrixTest <- xgb.DMatrix(data = as.matrix(data_valid), label = valid_label)
+  DMMatrixTest  <- xgb.DMatrix(data = as.matrix(data_valid), label = valid_label)
   
   watchlist <- list(train=DMMatrixTrain, test=DMMatrixTest)
   
